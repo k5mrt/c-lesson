@@ -16,11 +16,16 @@ int main() {
 
     int answers[3] = { 0, 0, 0 };
     int index = 0;
+    int in_number = 0;
 
     // Traverse string, find digits
     int i = 0;
     while (input[i] != ascii_eot) {
         if (input[i] == ascii_space) {
+            if (in_number) {
+                in_number = 0;
+                index++;
+            };
             i++;
             continue;
         };
@@ -28,12 +33,9 @@ int main() {
         for (int current_number = 0; current_number < 10; current_number++) {
             if (input[i] == ascii_numbers[current_number]) {
                 answers[index] = answers[index] * 10 + current_number;
+                in_number = 1;
                 break;
             };
-        };
-
-        if (input[i+1] == ascii_space) {
-            index++;
         };
         i++;
     };
