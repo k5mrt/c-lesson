@@ -19,14 +19,12 @@ int main() {
     int in_number = 0;
 
     // Traverse string, find digits
-    int i = 0;
-    while (input[i] != ascii_eot) {
+    for (int i = 0; input[i] != ascii_eot; i++) {
         if (input[i] == ascii_space) {
             if (in_number) {
                 in_number = 0;
                 index++;
             };
-            i++;
             continue;
         };
 
@@ -37,7 +35,6 @@ int main() {
                 break;
             };
         };
-        i++;
     };
 
     answer1 = answers[0];
