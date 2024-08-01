@@ -14,11 +14,10 @@ int main() {
     char ascii_space = 32;
     char ascii_numbers[10] = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
 
-    int reversed_answers[3] = { 0, 0, 0 };
+    int answers[3] = { 0, 0, 0 };
     int index = 0;
-    int digit = 0;
 
-    // Traverse string, find digits, convert to reversed number, store in reversed_answers
+    // Traverse string, find digits
     int i = 0;
     while (input[i] != ascii_eot) {
         if (input[i] == ascii_space) {
@@ -28,33 +27,15 @@ int main() {
 
         for (int current_number = 0; current_number < 10; current_number++) {
             if (input[i] == ascii_numbers[current_number]) {
-                digit++;
-                int pow_of_number = 1;
-                for (int current_digit = 1; current_digit < digit; current_digit++) {
-                    pow_of_number *= 10;
-                };
-                reversed_answers[index] += pow_of_number * current_number;
+                answers[index] = answers[index] * 10 + current_number;
                 break;
             };
         };
 
         if (input[i+1] == ascii_space) {
             index++;
-            digit = 0;
         };
         i++;
-    };
-
-    // Reverse number of reversed_answers number
-    int answers[3] = { 0, 0, 0 };
-    for (int i = 0; i < 3; i++) {
-        int answer = 0;
-        while (reversed_answers[i] != 0) {
-            int digit = reversed_answers[i] % 10;
-            answer = answer * 10 + digit;
-            reversed_answers[i] /= 10;
-        };
-        answers[i] = answer;
     };
 
     answer1 = answers[0];
