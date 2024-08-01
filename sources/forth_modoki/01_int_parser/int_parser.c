@@ -10,9 +10,9 @@ int main() {
     int answer3 = 0;
 
 
-    char ascii_eot = 0;
-    char ascii_space = 32;
-    char ascii_numbers[10] = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 };
+    char ascii_eot = '\0';
+    char ascii_space = ' ';
+    char ascii_numbers[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 
     int answers[3] = { 0, 0, 0 };
     int index = 0;
