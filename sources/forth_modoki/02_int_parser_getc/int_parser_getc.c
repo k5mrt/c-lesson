@@ -13,7 +13,7 @@ enum Type {
 };
 char parse_one(int last_c, int *out_val, enum Type *out_type) {
     int val;
-    int type;
+    enum Type type;
 
     if(last_c == ' ') {
         while(last_c == ' ') {
