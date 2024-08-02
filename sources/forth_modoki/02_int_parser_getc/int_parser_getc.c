@@ -11,6 +11,7 @@ enum Type {
     NUMBER,
     SPACE
 };
+
 char parse_one(int last_c, int *out_val, enum Type *out_type) {
     int val;
     enum Type type;
@@ -50,11 +51,23 @@ char parse_one(int last_c, int *out_val, enum Type *out_type) {
     return last_c;
 }
 
+void test_parse_one_123() {
+    cl_getc_set_src("123");
+    int out_val;
+    enum Type out_type;
+    int next_c = parse_one(cl_getc(), &out_val, &out_type);
+    assert(out_val == 123);
+    assert(out_type == NUMBER);
+    assert(next_c == EOF);
+}
+
 int main() {
     int answer1 = 0;
     int answer2 = 0;
 
     // write something here.
+
+    test_parse_one_123();
 
     cl_getc_set_src("123 456");
 
