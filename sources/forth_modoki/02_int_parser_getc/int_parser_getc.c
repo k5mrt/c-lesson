@@ -56,6 +56,8 @@ int main() {
 
     // write something here.
 
+    cl_getc_set_src("123 456");
+
     int answers[2] = {0, 0};
     int answer_index = 0;
 
