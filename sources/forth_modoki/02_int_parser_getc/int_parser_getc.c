@@ -53,10 +53,34 @@ char parse_one(int last_c, int *out_val, enum Type *out_type) {
 
 void test_parse_one_123() {
     cl_getc_set_src("123");
+
     int out_val;
     enum Type out_type;
+
     int next_c = parse_one(cl_getc(), &out_val, &out_type);
     assert(out_val == 123);
+    assert(out_type == NUMBER);
+    assert(next_c == EOF);
+}
+
+void test_parse_one_123_456() {
+    cl_getc_set_src("123 456");
+
+    int out_val;
+    enum Type out_type;
+
+    int next_c = parse_one(cl_getc(), &out_val, &out_type);
+    assert(out_val == 123);
+    assert(out_type == NUMBER);
+    assert(next_c == ' ');
+
+    next_c = parse_one(next_c, &out_val, &out_type);
+    assert(out_val == ' ');
+    assert(out_type == SPACE);
+    assert(next_c == '4');
+
+    next_c = parse_one(next_c, &out_val, &out_type);
+    assert(out_val == 456);
     assert(out_type == NUMBER);
     assert(next_c == EOF);
 }
@@ -68,6 +92,7 @@ int main() {
     // write something here.
 
     test_parse_one_123();
+    test_parse_one_123_456();
 
     cl_getc_set_src("123 456");
 
