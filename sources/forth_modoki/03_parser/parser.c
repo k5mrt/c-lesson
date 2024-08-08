@@ -150,7 +150,7 @@ static void test_parse_one_executable_name() {
 
     assert(ch == EOF);
     assert(token.ltype == expect_type);
-    assert(token.u.name == expect_name);
+    assert(strcmp(token.u.name, expect_name) == 0);
 }
 
 
