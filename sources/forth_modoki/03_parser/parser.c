@@ -32,6 +32,10 @@ static int is_number(int ch) {
     return '0' <= ch && ch <= '9';
 }
 
+static int is_lowercase_alphabet(int ch) {
+    return ('a' <= ch && ch <= 'z');
+}
+
 int parse_one(int prev_ch, struct Token *out_token) {
     if(prev_ch == EOF) {
         prev_ch = cl_getc();
@@ -57,6 +61,22 @@ int parse_one(int prev_ch, struct Token *out_token) {
             }
             out_token->u.number = out_token->u.number * 10 + (prev_ch - '0');
         }
+        return prev_ch;
+    } else if(is_lowercase_alphabet(prev_ch)) {
+        out_token->ltype = EXECUTABLE_NAME;
+        out_token->u.name = malloc(NAME_SIZE);
+        int len = 0;
+        out_token->u.name[len] = prev_ch;
+        len++;
+        while(is_lowercase_alphabet(prev_ch)) {
+            prev_ch = cl_getc();
+            if (prev_ch == EOF) {
+                break;
+            }
+            out_token->u.name[len] = prev_ch;
+            len++;
+        }
+        out_token->u.name[len] = '\0';
         return prev_ch;
     }
 
@@ -157,7 +177,7 @@ static void test_parse_one_executable_name() {
 static void unit_tests() {
     test_parse_one_empty_should_return_END_OF_FILE();
     test_parse_one_number();
-    // test_parse_one_executable_name();
+    test_parse_one_executable_name();
 }
 
 int main() {
