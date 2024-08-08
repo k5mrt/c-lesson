@@ -28,14 +28,43 @@ struct Token {
 
 #define NAME_SIZE 256
 
+const char ascii_numbers[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+
 int parse_one(int prev_ch, struct Token *out_token) {
-    /****
-     * 
-     * TODO: Implement here!
-     * 
-    ****/
-    out_token->ltype = UNKNOWN;
-    return EOF;
+    if(prev_ch == ' ') {
+        while(prev_ch == ' ') {
+            prev_ch = cl_getc();
+        }
+        out_token->ltype = SPACE;
+        out_token->u.onechar = ' ';
+        return prev_ch;
+    } else {
+        out_token->u.number = 0;
+        for(int i = 0; i < 10; i++) {
+            if(prev_ch == ascii_numbers[i]) {
+                out_token->u.number = i;
+                out_token->ltype = NUMBER;
+                break;
+            }
+        }
+        while(prev_ch != ' ') {
+            prev_ch = cl_getc();
+            if (prev_ch == EOF) {
+                break;
+            }
+            for(int i = 0; i < 10; i++) {
+                if(prev_ch == ascii_numbers[i]) {
+                    out_token->ltype = NUMBER;
+                    out_token->u.number = out_token->u.number * 10 + i;
+                    break;
+                }
+            }
+        }
+        if(out_token->ltype == UNKNOWN) {
+            out_token->ltype = END_OF_FILE;
+        }
+        return prev_ch;
+    }
 }
 
 
@@ -121,6 +150,6 @@ int main() {
     unit_tests();
 
     cl_getc_set_src("123 45 add /some { 2 3 add } def");
-    parser_print_all();
+    // parser_print_all();
     return 0;
 }
