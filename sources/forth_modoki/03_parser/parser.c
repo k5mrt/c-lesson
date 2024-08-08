@@ -66,16 +66,11 @@ int parse_one(int prev_ch, struct Token *out_token) {
         out_token->ltype = EXECUTABLE_NAME;
         out_token->u.name = malloc(NAME_SIZE);
         int len = 0;
-        out_token->u.name[len] = prev_ch;
-        len++;
-        while(is_lowercase_alphabet(prev_ch)) {
-            prev_ch = cl_getc();
-            if (prev_ch == EOF) {
-                break;
-            }
+        do {
             out_token->u.name[len] = prev_ch;
             len++;
-        }
+            prev_ch = cl_getc();
+        } while(is_lowercase_alphabet(prev_ch));
         out_token->u.name[len] = '\0';
         return prev_ch;
     }
