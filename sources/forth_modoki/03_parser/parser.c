@@ -44,6 +44,10 @@ static int is_slash(int ch) {
     return ch == '/';
 }
 
+static int is_open_curly(int ch) {
+    return ch == '{';
+}
+
 int parse_one(int prev_ch, struct Token *out_token) {
     if(prev_ch == EOF) {
         prev_ch = cl_getc();
@@ -86,6 +90,10 @@ int parse_one(int prev_ch, struct Token *out_token) {
         } while(is_lowercase_alphabet(prev_ch));
         out_token->u.name[len] = '\0';
         return prev_ch;
+    } else if(is_open_curly(prev_ch)) {
+        out_token->ltype = OPEN_CURLY;
+        out_token->u.onechar = prev_ch;
+        return cl_getc();
     }
 
     out_token->ltype = UNKNOWN;
