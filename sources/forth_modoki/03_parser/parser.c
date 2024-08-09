@@ -72,7 +72,7 @@ int parse_one(int prev_ch, struct Token *out_token) {
         out_token->u.number = prev_ch - '0';
         while(is_number(prev_ch)) {
             prev_ch = cl_getc();
-            if (prev_ch == EOF) {
+            if (!is_number(prev_ch)) {
                 break;
             }
             out_token->u.number = out_token->u.number * 10 + (prev_ch - '0');
@@ -245,6 +245,32 @@ static void test_parse_one_close_curly() {
     assert(token.u.onechar == expect_onechar);
 }
 
+static void test_parse_number_and_space() {
+    char* input = "123 45";
+
+    struct Token token = {UNKNOWN, {0}};
+    int ch;
+
+    cl_getc_set_src(input);
+    ch = parse_one(EOF, &token);
+
+    assert(ch == ' ');
+    assert(token.ltype == NUMBER);
+    assert(token.u.number == 123);
+
+    ch = parse_one(ch, &token);
+
+    assert(ch == '4');
+    assert(token.ltype == SPACE);
+    assert(token.u.onechar == ' ');
+
+    ch = parse_one(ch, &token);
+
+    assert(ch == EOF);
+    assert(token.ltype == NUMBER);
+    assert(token.u.number == 45);
+}
+
 
 static void unit_tests() {
     test_parse_one_empty_should_return_END_OF_FILE();
@@ -253,12 +279,13 @@ static void unit_tests() {
     test_parse_one_literal_name();
     test_parse_one_open_curly();
     test_parse_one_close_curly();
+    test_parse_number_and_space();
 }
 
 int main() {
     unit_tests();
 
     cl_getc_set_src("123 45 add /some { 2 3 add } def");
-    // parser_print_all();
+    parser_print_all();
     return 0;
 }
