@@ -221,6 +221,22 @@ static void test_parse_one_open_curly() {
     assert(token.u.onechar == expect_onechar);
 }
 
+static void test_parse_one_close_curly() {
+    char* input = "}";
+    char expect_onechar = '}';
+    int expect_type = CLOSE_CURLY;
+
+    struct Token token = {UNKNOWN, {0}};
+    int ch;
+
+    cl_getc_set_src(input);
+    ch = parse_one(EOF, &token);
+
+    assert(ch == EOF);
+    assert(token.ltype == expect_type);
+    assert(token.u.onechar == expect_onechar);
+}
+
 
 static void unit_tests() {
     test_parse_one_empty_should_return_END_OF_FILE();
@@ -228,6 +244,7 @@ static void unit_tests() {
     test_parse_one_executable_name();
     test_parse_one_literal_name();
     test_parse_one_open_curly();
+    test_parse_one_close_curly();
 }
 
 int main() {
