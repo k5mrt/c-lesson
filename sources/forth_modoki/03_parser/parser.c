@@ -28,12 +28,20 @@ struct Token {
 
 #define NAME_SIZE 256
 
+static int is_space(int ch) {
+    return ch == ' ';
+}
+
 static int is_number(int ch) {
     return '0' <= ch && ch <= '9';
 }
 
 static int is_lowercase_alphabet(int ch) {
     return ('a' <= ch && ch <= 'z');
+}
+
+static int is_slash(int ch) {
+    return ch == '/';
 }
 
 int parse_one(int prev_ch, struct Token *out_token) {
@@ -44,14 +52,14 @@ int parse_one(int prev_ch, struct Token *out_token) {
             return EOF;
         }
     }
-    if(prev_ch == ' ') {
+    if(is_space(prev_ch)) {
         out_token->ltype = SPACE;
         out_token->u.onechar = ' ';
-        while(prev_ch == ' ') {
+        while(is_space(prev_ch)) {
             prev_ch = cl_getc();
         }
         return prev_ch;
-    } else if (is_number(prev_ch)) {
+    } else if(is_number(prev_ch)) {
         out_token->ltype = NUMBER;
         out_token->u.number = prev_ch - '0';
         while(is_number(prev_ch)) {
@@ -62,22 +70,15 @@ int parse_one(int prev_ch, struct Token *out_token) {
             out_token->u.number = out_token->u.number * 10 + (prev_ch - '0');
         }
         return prev_ch;
-    } else if(prev_ch == '/') {
-        out_token->ltype = LITERAL_NAME;
+    } else if(is_lowercase_alphabet(prev_ch) || is_slash(prev_ch)) {
         out_token->u.name = malloc(NAME_SIZE);
         int len = 0;
-        prev_ch = cl_getc();
-        do {
-            out_token->u.name[len] = prev_ch;
-            len++;
+        if(is_slash(prev_ch)) {
+            out_token->ltype = LITERAL_NAME;
             prev_ch = cl_getc();
-        } while(is_lowercase_alphabet(prev_ch));
-        out_token->u.name[len] = '\0';
-        return prev_ch;
-    } else if(is_lowercase_alphabet(prev_ch)) {
-        out_token->ltype = EXECUTABLE_NAME;
-        out_token->u.name = malloc(NAME_SIZE);
-        int len = 0;
+        } else {
+            out_token->ltype = EXECUTABLE_NAME;
+        }
         do {
             out_token->u.name[len] = prev_ch;
             len++;
