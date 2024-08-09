@@ -62,6 +62,18 @@ int parse_one(int prev_ch, struct Token *out_token) {
             out_token->u.number = out_token->u.number * 10 + (prev_ch - '0');
         }
         return prev_ch;
+    } else if(prev_ch == '/') {
+        out_token->ltype = LITERAL_NAME;
+        out_token->u.name = malloc(NAME_SIZE);
+        int len = 0;
+        prev_ch = cl_getc();
+        do {
+            out_token->u.name[len] = prev_ch;
+            len++;
+            prev_ch = cl_getc();
+        } while(is_lowercase_alphabet(prev_ch));
+        out_token->u.name[len] = '\0';
+        return prev_ch;
     } else if(is_lowercase_alphabet(prev_ch)) {
         out_token->ltype = EXECUTABLE_NAME;
         out_token->u.name = malloc(NAME_SIZE);
